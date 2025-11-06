@@ -30,16 +30,23 @@ export default function CianSnippet({ address, rooms, area }: Props) {
   type CianData = {
     url: string;
     data?: {
-      object: { title: string; address: string };
-      marketPrice: {
-        averageRangeText: string;
-        averageRange: { min: number | null; max: number | null; currency: 'RUB'; unit: 'million' };
-        averageDescription: string;
-        averageValueMillionRub: number | null;
-        changePercentText: string;
-        changePercent: number | null;
-        changeDescription: string;
+      summary: {
+        object: { title: string; address: string };
+        marketPrice: {
+          averageRangeText: string;
+          averageRange: { min: number | null; max: number | null; currency: 'RUB'; unit: 'million' };
+          averageDescription: string;
+          averageValueMillionRub: number | null;
+          changePercentText: string;
+          changePercent: number | null;
+          changeDescription: string;
+        };
       };
+      house?: {
+        title: string;
+        rows: Array<{ name: string; value: string }>;
+        parsed: Record<string, unknown>;
+      } | null;
     };
     error?: string;
   };
@@ -57,8 +64,9 @@ export default function CianSnippet({ address, rooms, area }: Props) {
         const json: CianData = await res.json();
         if (!res.ok) throw new Error(json?.error || "Request failed");
         if (!cancelled) setData(json);
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || String(e));
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        if (!cancelled) setError(message);
       }
     };
     if (query) load();
@@ -98,48 +106,64 @@ export default function CianSnippet({ address, rooms, area }: Props) {
   }
 
   // Форматирование полей, которые могут приходить как объекты/числа
-  const rangeText = d.marketPrice.averageRangeText
-    || (d.marketPrice.averageRange.min != null && d.marketPrice.averageRange.max != null
-        ? `${d.marketPrice.averageRange.min} – ${d.marketPrice.averageRange.max} млн ₽`
-        : "");
-  const changePctText = d.marketPrice.changePercentText
-    || (d.marketPrice.changePercent != null ? `${d.marketPrice.changePercent}%` : "");
+  const rangeText = d.summary.marketPrice.averageRangeText
+    || (d.summary.marketPrice.averageRange.min != null && d.summary.marketPrice.averageRange.max != null
+      ? `${d.summary.marketPrice.averageRange.min} – ${d.summary.marketPrice.averageRange.max} млн ₽`
+      : "");
+  const changePctText = d.summary.marketPrice.changePercentText
+    || (d.summary.marketPrice.changePercent != null ? `${d.summary.marketPrice.changePercent}%` : "");
 
   const fmt = (n: number) => n.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
-  const minText = d.marketPrice.averageRange.min != null ? `${fmt(d.marketPrice.averageRange.min)} млн ₽` : "";
-  const maxText = d.marketPrice.averageRange.max != null ? `${fmt(d.marketPrice.averageRange.max)} млн ₽` : "";
+  const minText = d.summary.marketPrice.averageRange.min != null ? `${fmt(d.summary.marketPrice.averageRange.min)} млн ₽` : "";
+  const maxText = d.summary.marketPrice.averageRange.max != null ? `${fmt(d.summary.marketPrice.averageRange.max)} млн ₽` : "";
 
   return (
-    <div className="w-full rounded-lg border border-black/10 p-4 dark:border-white/15">
-      <div className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
-        Источник: <a href={data.url} target="_blank" rel="noreferrer" className="underline">CIAN</a>
-      </div>
-      <div className="space-y-2">
-        <div className="text-lg font-semibold text-black dark:text-zinc-50">{d.object.title}</div>
-        <div className="text-zinc-700 dark:text-zinc-300">{d.object.address}</div>
-        <div className="pt-3">
-          {rangeText && (
-            <div className="text-xl font-semibold text-black dark:text-zinc-50">{rangeText}</div>
-          )}
-          {d.marketPrice.averageDescription && (
-            <div className="text-zinc-700 dark:text-zinc-300">{d.marketPrice.averageDescription}</div>
-          )}
-          {(minText || maxText) && (
-            <div className="text-zinc-700 dark:text-zinc-300">
-              {minText && (<span>Мин: {minText}</span>)}
-              {minText && maxText && <span> · </span>}
-              {maxText && (<span>Макс: {maxText}</span>)}
-            </div>
-          )}
+    <div className="space-y-3">
+      <div className="w-full rounded-lg border border-black/10 p-4 dark:border-white/15">
+        <div className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
+          Источник: <a href={data.url} target="_blank" rel="noreferrer" className="underline">CIAN</a>
         </div>
-        <div className="pt-1">
-          {(changePctText || d.marketPrice.changeDescription) && (
-            <div className="text-zinc-700 dark:text-zinc-300">
-              {d.marketPrice.changeDescription || 'Изменение'}{changePctText ? `: ${changePctText}` : ''}
-            </div>
-          )}
+        <div className="space-y-2">
+          <div className="text-lg font-semibold text-black dark:text-zinc-50">{d.summary.object.title}</div>
+          <div className="text-zinc-700 dark:text-zinc-300">{d.summary.object.address}</div>
+          <div className="pt-3">
+            {rangeText && (
+              <div className="text-xl font-semibold text-black dark:text-zinc-50">{rangeText}</div>
+            )}
+            {d.summary.marketPrice.averageDescription && (
+              <div className="text-zinc-700 dark:text-zinc-300">{d.summary.marketPrice.averageDescription}</div>
+            )}
+            {(minText || maxText) && (
+              <div className="text-zinc-700 dark:text-zinc-300">
+                {minText && (<span>Мин: {minText}</span>)}
+                {minText && maxText && <span> · </span>}
+                {maxText && (<span>Макс: {maxText}</span>)}
+              </div>
+            )}
+          </div>
+          <div className="pt-1">
+            {(changePctText || d.summary.marketPrice.changeDescription) && (
+              <div className="text-zinc-700 dark:text-zinc-300">
+                {d.summary.marketPrice.changeDescription || 'Изменение'}{changePctText ? `: ${changePctText}` : ''}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {d.house && (
+        <div className="w-full rounded-lg border border-black/10 p-4 dark:border-white/15">
+          <div className="mb-2 text-lg font-semibold text-black dark:text-zinc-50">{d.house.title || 'О доме'}</div>
+          <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            {d.house.rows.map((r, idx) => (
+              <div key={idx} className="flex items-start justify-between gap-3 py-2">
+                <div className="text-zinc-600 dark:text-zinc-400">{r.name}</div>
+                <div className="text-zinc-900 dark:text-zinc-100">{r.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

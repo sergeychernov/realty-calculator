@@ -1,4 +1,11 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Home() {
+  const [address, setAddress] = useState("");
+  const [rooms, setRooms] = useState("студия");
+  const [area, setArea] = useState("");
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -17,6 +24,8 @@ export default function Home() {
               required
               placeholder="Например: Москва, ул. Тверская, 1"
               className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-white/20"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
 
@@ -28,7 +37,8 @@ export default function Home() {
               id="rooms"
               name="rooms"
               className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:focus:ring-white/20"
-              defaultValue="студия"
+              value={rooms}
+              onChange={(e) => setRooms(e.target.value)}
             >
               <option value="студия">студия</option>
               <option value="1">1</option>
@@ -53,6 +63,8 @@ export default function Home() {
               required
               placeholder="Например: 42.5"
               className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-white/20"
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
             />
           </div>
 
@@ -65,6 +77,25 @@ export default function Home() {
             </button>
           </div>
         </form>
+
+        <div className="w-full max-w-xl pt-6">
+          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Тестовые объекты</h2>
+          <ul className="list-disc pl-5 text-zinc-800 dark:text-zinc-300">
+            <li>
+              <button
+                type="button"
+                className="underline"
+                onClick={() => {
+                  setAddress("Москва, Красноказарменная улица, 14ак6");
+                  setRooms("4");
+                  setArea("96");
+                }}
+              >
+                Москва, Красноказарменная улица, 14ак6 · 4 комнаты · 96 м²
+              </button>
+            </li>
+          </ul>
+        </div>
       </main>
     </div>
   );
