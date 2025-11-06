@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import CianSnippet from "./CianSnippet";
+import DadataSnippet from "./DadataSnippet";
 
 export default async function ReportPage({
   searchParams,
@@ -10,6 +11,18 @@ export default async function ReportPage({
   const address = params?.address ?? "";
   const rooms = params?.rooms ?? "";
   const area = params?.area ?? "";
+  const dadataData = await (async () => {
+    if (!address) return null;
+    try {
+      const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/dadata`, "http://localhost:3000");
+      url.searchParams.set("q", address);
+      const res = await fetch(url.toString(), { cache: "no-store" });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  })();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -31,6 +44,10 @@ export default async function ReportPage({
         <div className="w-full max-w-xl pt-4">
           <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция CIAN</h2>
           <CianSnippet address={address} rooms={rooms} area={area} />
+        </div>
+        <div className="w-full max-w-xl pt-2">
+          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция Dadata</h2>
+          <DadataSnippet data={dadataData} />
         </div>
       </main>
     </div>

@@ -20,6 +20,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment variables
+
+Create a `.env` file in the project root (not committed, see `.gitignore`) and put your secrets there. These variables are loaded automatically in development when running `yarn dev`.
+
+Required variables:
+
+```
+DADATA_API=your_dadata_api_key
+DADATA_SECRET=your_dadata_secret
+```
+
+Notes:
+- You can also use `.env.local` (recommended for local development). Both `.env` and `.env.local` are ignored by git.
+- Variables are used on the server side in `app/api/dadata/route.ts` and are not exposed to the browser.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
