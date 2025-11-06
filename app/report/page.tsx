@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import CianSnippet from "./CianSnippet";
 import DadataSnippet from "./DadataSnippet";
+import { headers } from "next/headers";
 import type { DadataResponse } from "@/lib/dadata/types";
 
 export default async function ReportPage({
@@ -15,7 +16,11 @@ export default async function ReportPage({
   const dadataData: DadataResponse | null = await (async () => {
     if (!address) return null;
     try {
-      const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/dadata`, "http://localhost:3000");
+      const h = await headers();
+      const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
+      const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+      const baseUrl = `${proto}://${host}`;
+      const url = new URL(`/api/dadata`, baseUrl);
       url.searchParams.set("q", address);
       const res = await fetch(url.toString(), { cache: "no-store" });
       if (!res.ok) return null;
