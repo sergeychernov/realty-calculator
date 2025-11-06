@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "html2canvas": "^1.4.1",
     "jsdom": "^24.0.0",
+    "jspdf": "^3.0.3",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"

@@ -3,6 +3,7 @@ import CianSnippet from "./CianSnippet";
 import DadataSnippet from "./DadataSnippet";
 import { headers } from "next/headers";
 import type { DadataResponse } from "@/lib/dadata/types";
+import DownloadPdfButton from "./DownloadPdfButton";
 
 export default async function ReportPage({
   searchParams,
@@ -36,7 +37,7 @@ export default async function ReportPage({
         <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
           Отчёт
         </h1>
-        <div className="w-full max-w-xl space-y-4 text-zinc-800 dark:text-zinc-300">
+        <div id="report-content" className="w-full max-w-xl space-y-4 text-zinc-800 dark:text-zinc-300">
           <p>
             <span className="font-medium">Адрес:</span> {address || "—"}
           </p>
@@ -46,14 +47,17 @@ export default async function ReportPage({
           <p>
             <span className="font-medium">Метраж:</span> {area || "—"}
           </p>
+          <div className="w-full pt-4">
+            <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция CIAN</h2>
+            <CianSnippet address={address} rooms={rooms} area={area} />
+          </div>
+          <div className="w-full pt-2">
+            <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция Dadata</h2>
+            <DadataSnippet data={dadataData} />
+          </div>
         </div>
-        <div className="w-full max-w-xl pt-4">
-          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция CIAN</h2>
-          <CianSnippet address={address} rooms={rooms} area={area} />
-        </div>
-        <div className="w-full max-w-xl pt-2">
-          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция Dadata</h2>
-          <DadataSnippet data={dadataData} />
+        <div className="w-full">
+          <DownloadPdfButton targetId="report-content" />
         </div>
       </main>
     </div>
