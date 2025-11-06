@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "playwright:cian:ui": "tsx playwright-scripts/cian.ts --ui"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
@@ -18,6 +19,7 @@
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/jsdom": "^27.0.0",
     "@types/node": "^20",
@@ -26,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

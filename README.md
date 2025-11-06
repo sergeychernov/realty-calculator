@@ -35,6 +35,14 @@ Notes:
 - You can also use `.env.local` (recommended for local development). Both `.env` and `.env.local` are ignored by git.
 - Variables are used on the server side in `app/api/dadata/route.ts` and are not exposed to the browser.
 
+## Playwright
+
+This project includes Playwright for web automation. See [PLAYWRIGHT.md](./PLAYWRIGHT.md) for detailed documentation.
+
+### Available Commands
+
+- `playwright:cian:ui` - Run cian scaper in ui mode
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

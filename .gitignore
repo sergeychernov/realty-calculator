@@ -18,6 +18,13 @@ yarn-error.log*
 .DS_Store
 .idea
 .vscode
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/screenshots/
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
