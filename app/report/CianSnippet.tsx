@@ -47,6 +47,20 @@ export default function CianSnippet({ address, rooms, area }: Props) {
         rows: Array<{ name: string; value: string }>;
         parsed: Record<string, unknown>;
       } | null;
+      nearest?: {
+        items: Array<{
+          id: string | null;
+          title: string;
+          priceText: string;
+          pricePerSqmText: string;
+          onCianDaysText: string;
+          publishedDateText: string;
+          statusText: string;
+          imageUrl?: string;
+          url?: string | null;
+        }>;
+        meta: { total: number };
+      } | null;
     };
     error?: string;
   };
@@ -162,6 +176,36 @@ export default function CianSnippet({ address, rooms, area }: Props) {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {d.nearest && d.nearest.items.length > 0 && (
+        <div className="w-full rounded-lg border border-black/10 p-4 dark:border-white/15">
+          <div className="mb-2 text-lg font-semibold text-black dark:text-zinc-50">Ближайшие объявления</div>
+          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            {d.nearest.items.slice(0, 8).map((it, idx) => (
+              <li key={`${it.id ?? idx}`} className="flex gap-3 py-3">
+                {it.imageUrl && (
+                  <img src={it.imageUrl} alt="" className="h-16 w-26 shrink-0 rounded object-cover" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm text-zinc-900 dark:text-zinc-100">{it.title || '—'}</div>
+                  <div className="text-xs text-zinc-600 dark:text-zinc-400">
+                    {it.publishedDateText || ''}{it.onCianDaysText ? ` · ${it.onCianDaysText}` : ''}{it.statusText ? ` · ${it.statusText}` : ''}
+                  </div>
+                </div>
+                <div className="shrink-0 text-right text-sm">
+                  <div className="text-zinc-900 dark:text-zinc-100">{it.priceText || '—'}</div>
+                  {it.pricePerSqmText && (
+                    <div className="text-xs text-zinc-600 dark:text-zinc-400">{it.pricePerSqmText}</div>
+                  )}
+                  {it.url && (
+                    <a href={it.url} target="_blank" rel="noreferrer" className="text-xs underline">Открыть</a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

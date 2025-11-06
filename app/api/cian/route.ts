@@ -73,11 +73,12 @@ export async function GET(request: Request) {
 		}
 
 		const house = parser.getHouse();
+		const nearest = parser.getNearest();
 
 		return NextResponse.json(
 			{
 				url: targetUrlStr,
-				data: { summary, house },
+				data: { summary, house, nearest },
 			},
 			{ status: 200 }
 		);

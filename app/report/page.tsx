@@ -13,13 +13,13 @@ export default async function ReportPage({
   const address = params?.address ?? "";
   const rooms = params?.rooms ?? "";
   const area = params?.area ?? "";
+  const h = await headers();
+  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
+  const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+  const baseUrl = `${proto}://${host}`;
   const dadataData: DadataResponse | null = await (async () => {
     if (!address) return null;
     try {
-      const h = await headers();
-      const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-      const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
-      const baseUrl = `${proto}://${host}`;
       const url = new URL(`/api/dadata`, baseUrl);
       url.searchParams.set("q", address);
       const res = await fetch(url.toString(), { cache: "no-store" });
@@ -29,6 +29,7 @@ export default async function ReportPage({
       return null;
     }
   })();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-start gap-6 py-32 px-16 bg-white dark:bg-black">

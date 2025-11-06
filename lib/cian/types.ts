@@ -25,6 +25,26 @@ export interface CianSummary {
 }
 
 
+export interface CianNearestItem {
+	id: string | null;
+	title: string;
+	priceText: string;
+	pricePerSqmText: string;
+	onCianDaysText: string;
+	publishedDateText: string;
+	statusText: string;
+	imageUrl?: string;
+	url?: string | null;
+}
+
+export interface CianNearest {
+	items: CianNearestItem[];
+	meta: {
+		total: number;
+		fetchedAt: string;
+	};
+}
+
 export interface CianHouse {
 	title: string;
 	rows: Array<{ name: string; value: string }>;

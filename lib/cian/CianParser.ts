@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
-import { SUMMARY_XPATH, HOUSE_XPATH } from "@/lib/cian/xpath";
-import type { CianSummary, CianHouse } from "@/lib/cian/types";
+import { SUMMARY_XPATH, HOUSE_XPATH, NEAREST_XPATH } from "@/lib/cian/xpath";
+import type { CianSummary, CianHouse, CianNearest, CianNearestItem } from "@/lib/cian/types";
 
 export class CianParser {
 	private dom: JSDOM;
@@ -234,6 +234,58 @@ export class CianParser {
 		};
 
 		return data;
+	}
+
+	public getNearest(): CianNearest | null {
+		const root = this.getNode(NEAREST_XPATH);
+		if (!root) return null;
+
+		const q = (sel: string, el: Element): Element | null => el.querySelector(sel);
+		const qa = (sel: string, el: Element): Element[] => Array.from(el.querySelectorAll(sel));
+
+		const itemNodes = qa('[data-testid^="offers_history_listing_item_"]', root);
+		const items: CianNearestItem[] = itemNodes.map((node) => {
+			const testId = node.getAttribute('data-testid') || '';
+			const idMatch = testId.match(/_(\d+)$/);
+			const id = idMatch ? idMatch[1] : null;
+			const mainInfo = q('[data-name="WideOfferMainInfo"] span, .x4800526d--_05668--main-info span', node);
+			const priceSpan = q('[data-name="Price"] .x4800526d--_97ada--price span, [data-name="Price"] span', node);
+			// Цена за метр обычно соседний span после цены
+			let pricePerSqmText = "";
+			const perSqmCandidate = q('[data-name="Price"] span.x4800526d--_10cdd--color_gray60_100, [data-name="Price"] .x4800526d--_10cdd--color_gray60_100', node);
+			pricePerSqmText = this.norm(perSqmCandidate?.textContent || "");
+			const cells = qa('.x4800526d--_05668--cell', node);
+			// По образцу: 0 - main, 1 - price, 2 - onCian, 3 - published, 4 - status
+			const onCianCell = cells[2];
+			const publishedCell = cells[3];
+			const statusCell = cells[4];
+			const onCianDaysText = this.norm(onCianCell?.textContent || "");
+			let publishedDateText = "";
+			if (publishedCell) {
+				const main = q('span', publishedCell);
+				publishedDateText = this.norm(main?.textContent || "");
+			}
+			const statusText = this.norm(statusCell?.textContent || "");
+			const img = q('img', node);
+			const imageUrl = img ? (img.getAttribute('src') || undefined) : undefined;
+			const url = id ? `https://www.cian.ru/sale/flat/${id}/` : null;
+			return {
+				id,
+				title: this.norm(mainInfo?.textContent || ""),
+				priceText: this.norm(priceSpan?.textContent || ""),
+				pricePerSqmText,
+				onCianDaysText,
+				publishedDateText,
+				statusText,
+				imageUrl,
+				url,
+			};
+		}).filter((it) => it.title || it.priceText || it.id);
+
+		return {
+			items,
+			meta: { total: items.length, fetchedAt: new Date().toISOString() },
+		};
 	}
 }
 
