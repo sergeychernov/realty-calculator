@@ -1,17 +1,4 @@
-type DadataSuggestion = {
-  value?: string;
-  unrestricted_value?: string;
-  data?: {
-    geo_lat?: string;
-    geo_lon?: string;
-    [key: string]: unknown;
-  };
-};
-
-type DadataResponse = {
-  suggestions?: DadataSuggestion[];
-  [key: string]: unknown;
-};
+import type { DadataResponse } from "@/lib/dadata/types";
 
 export default function DadataSnippet({ data }: { data: DadataResponse | null }) {
   const suggestions = data?.suggestions || [];

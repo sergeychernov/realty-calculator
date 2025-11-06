@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import CianSnippet from "./CianSnippet";
 import DadataSnippet from "./DadataSnippet";
+import type { DadataResponse } from "@/lib/dadata/types";
 
 export default async function ReportPage({
   searchParams,
@@ -11,14 +12,14 @@ export default async function ReportPage({
   const address = params?.address ?? "";
   const rooms = params?.rooms ?? "";
   const area = params?.area ?? "";
-  const dadataData = await (async () => {
+  const dadataData: DadataResponse | null = await (async () => {
     if (!address) return null;
     try {
       const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/dadata`, "http://localhost:3000");
       url.searchParams.set("q", address);
       const res = await fetch(url.toString(), { cache: "no-store" });
       if (!res.ok) return null;
-      return await res.json();
+      return (await res.json()) as DadataResponse;
     } catch {
       return null;
     }
