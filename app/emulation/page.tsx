@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import type { CianData } from "@/playwright-scripts/cian/extract-data";
 import { useSearchParams } from "next/navigation";
 
-export default function EmulationPage() {
+function EmulationPageContent() {
   const [address, setAddress] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [roomsCount, setRoomsCount] = useState("1");
@@ -334,5 +333,13 @@ export default function EmulationPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function EmulationPage() {
+  return (
+    <Suspense fallback={<div />}>
+      <EmulationPageContent />
+    </Suspense>
   );
 }
