@@ -70,12 +70,6 @@ export default function EmulationPage() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-16 bg-white dark:bg-black sm:items-start">
         <div className="w-full max-w-xl">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-zinc-50 mb-4"
-          >
-            ← Назад на главную
-          </Link>
           <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
             Cian Emulation
           </h1>
