@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
   const [address, setAddress] = useState("");
   const [rooms, setRooms] = useState("студия");
   const [area, setArea] = useState("");
+  const [entrance, setEntrance] = useState("");
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-16 bg-white dark:bg-black sm:items-start">
@@ -19,11 +20,7 @@ export default function Home() {
         <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
           Калькулятор недвижимости
         </h1>
-        <form
-          method="GET"
-          action="/report"
-          className="w-full max-w-xl space-y-6"
-        >
+        <form method="GET" action="/report" className="w-full max-w-xl space-y-6">
           <div className="flex flex-col gap-2">
             <label
               htmlFor="address"
@@ -88,6 +85,24 @@ export default function Home() {
             />
           </div>
 
+          <div className="flex flex-col gap-2">
+            <label htmlFor="entrance" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Подъезд
+            </label>
+            <input
+              id="entrance"
+              name="entrance"
+              type="number"
+              inputMode="numeric"
+              min="1"
+              step="1"
+              placeholder="Например: 11"
+              className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-white/20"
+              value={entrance}
+              onChange={(e) => setEntrance(e.target.value)}
+            />
+          </div>
+
           <div>
             <button
               type="submit"
@@ -111,9 +126,10 @@ export default function Home() {
                   setAddress("Москва, Красноказарменная улица, 14ак6");
                   setRooms("4");
                   setArea("96");
+                  setEntrance("11");
                 }}
               >
-                Москва, Красноказарменная улица, 14ак6 · 4 комнаты · 96 м²
+                Москва, Красноказарменная улица, 14ак6 · 4 комнаты · 96 м² · подъезд 11
               </button>
             </li>
           </ul>

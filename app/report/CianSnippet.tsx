@@ -6,6 +6,7 @@ type Props = {
   address: string;
   rooms: string;
   area: string;
+  entrance?: string;
 };
 
 function mapRooms(rooms: string): string {
@@ -16,16 +17,17 @@ function mapRooms(rooms: string): string {
   return "";
 }
 
-export default function CianSnippet({ address, rooms, area }: Props) {
+export default function CianSnippet({ address, rooms, area, entrance }: Props) {
   const query = useMemo(() => {
     const params = new URLSearchParams();
     if (address) params.set("address", address);
     if (area) params.set("totalArea", area);
     const roomsCount = mapRooms(rooms);
     if (roomsCount) params.set("roomsCount", roomsCount);
+    if (entrance) params.set("entrance", entrance);
     params.set("valuationType", "sale");
     return params.toString();
-  }, [address, rooms, area]);
+  }, [address, rooms, area, entrance]);
 
   type CianData = {
     url: string;

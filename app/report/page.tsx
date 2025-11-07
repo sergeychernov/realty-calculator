@@ -8,12 +8,13 @@ import DownloadPdfButton from "./DownloadPdfButton";
 export default async function ReportPage({
   searchParams,
 }: {
-  searchParams: Promise<{ address?: string; rooms?: string; area?: string }>;
+  searchParams: Promise<{ address?: string; rooms?: string; area?: string; entrance?: string }>;
 }) {
   const params = await searchParams;
   const address = params?.address ?? "";
   const rooms = params?.rooms ?? "";
   const area = params?.area ?? "";
+  const entrance = params?.entrance ?? "";
   const h = await headers();
   const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
   const proto = h.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
@@ -39,7 +40,7 @@ export default async function ReportPage({
         </h1>
         <div id="report-content" className="w-full max-w-xl space-y-4 text-zinc-800 dark:text-zinc-300">
           <p>
-            <span className="font-medium">Адрес:</span> {address || "—"}
+            <span className="font-medium">Адрес:</span> {(entrance ? `${address}, подъезд ${entrance}` : address) || "—"}
           </p>
           <p>
             <span className="font-medium">Комнаты:</span> {rooms || "—"}
@@ -49,7 +50,7 @@ export default async function ReportPage({
           </p>
           <div className="w-full pt-4">
             <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция CIAN</h2>
-            <CianSnippet address={address} rooms={rooms} area={area} />
+            <CianSnippet address={address} rooms={rooms} area={area} entrance={entrance} />
           </div>
           <div className="w-full pt-2">
             <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Секция Dadata</h2>
