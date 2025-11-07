@@ -169,9 +169,13 @@ export default function EmulationPage() {
               </h3>
               <div className="space-y-2 text-zinc-800 dark:text-zinc-300">
                 {result.data.realEstateInfo.price && (
-                  <p>
-                    <span className="font-medium">Оценочная стоимость:</span>{" "}
-                    {result.data.realEstateInfo.price}
+                  <p className="text-l font-bold text-black dark:text-zinc-50 bg-yellow-100 dark:bg-yellow-900/30 p-4 rounded-lg border-2 border-yellow-400 dark:border-yellow-600">
+                    <span className="font-medium">Оценочная стоимость:</span>
+                    <br />
+                    {result.data.realEstateInfo.price.replace(
+                      "Средняя",
+                      ", Средняя",
+                    )}
                   </p>
                 )}
 

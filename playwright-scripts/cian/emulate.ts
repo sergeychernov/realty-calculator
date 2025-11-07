@@ -148,6 +148,11 @@ if (require.main === module) {
     roomNumber: "27",
     roomsCount: 2,
     area: 52.7,
+
+    // address: "Москва, Хорошёвское шоссе, 12к1",
+    // roomNumber: "132",
+    // roomsCount: 1,
+    // area: 45,
   };
 
   emulate(defaultUserInput).catch((error) => {
