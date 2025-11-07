@@ -1,58 +1,35 @@
 import { NextResponse } from "next/server";
-import { emulate } from "@/playwright-scripts/cian/emulate";
+import { emulate, type UserInput } from "@/playwright-scripts/cian/emulate";
 import type { CianData } from "@/playwright-scripts/cian/extract-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // Increase timeout for Playwright operations
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    console.log("🚀 Starting Cian emulation...");
+    const { searchParams } = new URL(request.url);
 
-    const data: CianData | null = await emulate();
+    // Parse query parameters
+    const userInput: Partial<UserInput> = {};
 
-    if (!data) {
-      return NextResponse.json(
-        {
-          error: "Failed to extract data from Cian",
-          data: null,
-        },
-        { status: 500 },
-      );
-    }
+    const address = searchParams.get("address");
+    if (address) userInput.address = address;
 
-    console.log("✅ Cian emulation completed successfully");
+    const roomNumber = searchParams.get("roomNumber");
+    if (roomNumber) userInput.roomNumber = roomNumber;
 
-    return NextResponse.json(
-      {
-        success: true,
-        data,
-      },
-      { status: 200 },
+    const roomsCount = searchParams.get("roomsCount");
+    if (roomsCount) userInput.roomsCount = parseInt(roomsCount, 10);
+
+    const area = searchParams.get("area");
+    if (area) userInput.area = parseFloat(area);
+
+    console.log("🚀 Starting Cian emulation...", userInput);
+
+    const data: CianData | null = await emulate(
+      Object.keys(userInput).length > 0 ? (userInput as UserInput) : undefined,
     );
-  } catch (error) {
-    console.error("❌ Error in cian-emulate API:", error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : String(error),
-        data: null,
-      },
-      { status: 500 },
-    );
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-
-    // TODO: Accept userInput parameters from request body
-    // const { address, roomNumber, roomsCount, area } = body;
-
-    console.log("🚀 Starting Cian emulation with custom parameters...", body);
-
-    const data: CianData | null = await emulate();
 
     if (!data) {
       return NextResponse.json(

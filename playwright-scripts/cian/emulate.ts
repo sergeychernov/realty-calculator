@@ -1,6 +1,13 @@
 import { chromium } from "@playwright/test";
 import { extractData, CianData } from "./extract-data";
 
+export interface UserInput {
+  address: string;
+  roomNumber: string;
+  roomsCount: number;
+  area: number;
+}
+
 // Check if UI mode is enabled via command-line argument
 const uiMode =
   process.argv.includes("--ui") || process.argv.includes("--headed");
@@ -11,17 +18,9 @@ const userContext = {
   // TODO: extend ...
 };
 
-const userInput = {
-  address: "Москва, Усиевича, 1",
-  roomNumber: "27",
-  roomsCount: 2,
-  area: 52.7, // might be optional for well known addresses
-  // TODO: extend ...
-};
-
 // TODO: POM PageObjectModel for all page steps
 
-export async function emulate(): Promise<CianData | null> {
+export async function emulate(userInput: UserInput): Promise<CianData | null> {
   const browser = await chromium.launch({
     headless: !uiMode,
   });
@@ -141,7 +140,14 @@ export async function emulate(): Promise<CianData | null> {
 
 // Run directly when executed as a script
 if (require.main === module) {
-  emulate().catch((error) => {
+  const defaultUserInput: UserInput = {
+    address: "Москва, Усиевича, 1",
+    roomNumber: "27",
+    roomsCount: 2,
+    area: 52.7,
+  };
+
+  emulate(defaultUserInput).catch((error) => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

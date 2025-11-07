@@ -15,14 +15,12 @@ GET /api/cian-emulate
 ### Usage
 
 #### GET Request
-```bash
-# Using curl
-curl http://localhost:3000/api/cian-emulate
 
-# Using fetch in JavaScript
-const response = await fetch('/api/cian-emulate');
-const result = await response.json();
-console.log(result.data);
+You can call the endpoint without parameters (uses default values) or with query parameters to specify property details:
+
+```bash
+# Using curl - with custom parameters
+curl "http://localhost:3000/api/cian-emulate?address=Москва,%20Усиевича,%201&roomNumber=27&roomsCount=2&area=52.7"
 ```
 
 ### Response Format
@@ -54,8 +52,8 @@ console.log(result.data);
 ### Notes
 
 - The endpoint has a 60-second timeout for Playwright operations
-- GET request uses default parameters (currently hardcoded in emulate.ts)
 - The script runs in headless mode when called from the API
+- For GET requests, all parameters should be URL-encoded
 
 ---
 
