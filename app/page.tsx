@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [address, setAddress] = useState("");
@@ -8,13 +9,26 @@ export default function Home() {
   const [area, setArea] = useState("");
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-16 bg-white dark:bg-black sm:items-start">
+        <Link
+          href="/emulation"
+          className="inline-flex items-center text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-zinc-50 underline"
+        >
+          → Перейти к Cian Emulation
+        </Link>
         <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
           Калькулятор недвижимости
         </h1>
-        <form method="GET" action="/report" className="w-full max-w-xl space-y-6">
+        <form
+          method="GET"
+          action="/report"
+          className="w-full max-w-xl space-y-6"
+        >
           <div className="flex flex-col gap-2">
-            <label htmlFor="address" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label
+              htmlFor="address"
+              className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
               Адрес
             </label>
             <input
@@ -30,7 +44,10 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="rooms" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label
+              htmlFor="rooms"
+              className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
               Количество комнат
             </label>
             <select
@@ -50,7 +67,10 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="area" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label
+              htmlFor="area"
+              className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
               Метраж (м²)
             </label>
             <input
@@ -79,7 +99,9 @@ export default function Home() {
         </form>
 
         <div className="w-full max-w-xl pt-6">
-          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">Тестовые объекты</h2>
+          <h2 className="mb-2 text-xl font-semibold text-black dark:text-zinc-50">
+            Тестовые объекты
+          </h2>
           <ul className="list-disc pl-5 text-zinc-800 dark:text-zinc-300">
             <li>
               <button
