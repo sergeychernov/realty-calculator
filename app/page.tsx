@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [address, setAddress] = useState("");
+  const [roomNumber, setRoomNumber] = useState("");
   const [rooms, setRooms] = useState("студия");
   const [area, setArea] = useState("");
   const [entrance, setEntrance] = useState("");
@@ -37,6 +38,25 @@ export default function Home() {
               className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-white/20"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="roomNumber"
+              className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Номер квартиры
+            </label>
+            <input
+              id="roomNumber"
+              name="roomNumber"
+              type="text"
+              required
+              placeholder="Например: 27"
+              className="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-black placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-black/20 dark:border-white/20 dark:bg-[#0a0a0a] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-white/20"
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
             />
           </div>
 
@@ -124,6 +144,7 @@ export default function Home() {
                 className="underline"
                 onClick={() => {
                   setAddress("Москва, Красноказарменная улица, 14ак6");
+                  setRoomNumber("27");
                   setRooms("4");
                   setArea("96");
                   setEntrance("11");
