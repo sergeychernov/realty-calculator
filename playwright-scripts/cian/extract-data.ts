@@ -3,8 +3,8 @@ import { Page } from "@playwright/test";
 
 // TODO: список сверить с google table
 interface RealEstateInfo {
-  price?: string;
-  buildingInfo?: Record<string, string>;
+  price: string;
+  buildingInfo: Record<string, string>;
   additionalInfo: { [key: string]: any };
 }
 
@@ -26,19 +26,34 @@ interface CianData {
  */
 async function extractData(page: Page): Promise<CianData> {
   // Wait for the page to load
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
 
   // Extract real estate object information
   const realEstateInfo: RealEstateInfo = await page.evaluate(() => {
     const info: Partial<RealEstateInfo> = {};
 
     // Extract price information
-    const priceElement = document.getElementById("estimation");
-    if (priceElement) {
-      info.price = priceElement.textContent?.trim() || "";
-    }
+    info.price =
+      document.getElementById("estimation")?.textContent?.trim() || "";
 
     // Building Info
+    const buildingInfo: Record<string, string> = {};
+    const aboutHomeContainer = document.getElementById("aboutHome");
+    if (aboutHomeContainer) {
+      const rows = aboutHomeContainer.querySelectorAll("[class$='--row']");
+      rows.forEach((row) => {
+        const nameElement = row.querySelector("[class$='--name']");
+        const valElement = row.querySelector("[class$='--val']");
+        if (nameElement && valElement) {
+          const name = nameElement.textContent?.trim() || "";
+          const value = valElement.textContent?.trim() || "";
+          if (name && value) {
+            buildingInfo[name] = value;
+          }
+        }
+      });
+    }
+    info.buildingInfo = buildingInfo;
 
     // Extract all data attributes and visible text content
     const mainContainer = document.querySelector("body");

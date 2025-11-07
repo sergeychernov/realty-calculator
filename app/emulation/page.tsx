@@ -168,40 +168,49 @@ export default function EmulationPage() {
                 Информация о недвижимости
               </h3>
               <div className="space-y-2 text-zinc-800 dark:text-zinc-300">
-                <p>
-                  <span className="font-medium">Адрес:</span>{" "}
-                  {result.data.realEstateInfo.address}
-                </p>
-                <p>
-                  <span className="font-medium">Площадь:</span>{" "}
-                  {result.data.realEstateInfo.totalArea} м²
-                </p>
-                <p>
-                  <span className="font-medium">Комнат:</span>{" "}
-                  {result.data.realEstateInfo.roomsCount}
-                </p>
                 {result.data.realEstateInfo.price && (
                   <p>
-                    <span className="font-medium">Цена:</span>{" "}
+                    <span className="font-medium">Оценочная стоимость:</span>{" "}
                     {result.data.realEstateInfo.price}
                   </p>
                 )}
-                {result.data.realEstateInfo.pricePerMeter && (
-                  <p>
-                    <span className="font-medium">Цена за м²:</span>{" "}
-                    {result.data.realEstateInfo.pricePerMeter}
-                  </p>
+
+                {Object.keys(result.data.realEstateInfo.buildingInfo).length >
+                  0 && (
+                  <div className="mt-4">
+                    <h4 className="font-medium mb-2">Информация о здании:</h4>
+                    <div className="space-y-1 pl-4">
+                      {Object.entries(
+                        result.data.realEstateInfo.buildingInfo,
+                      ).map(([key, value]) => (
+                        <p key={key} className="text-sm">
+                          <span className="font-medium">{key}:</span> {value}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
                 )}
-                {result.data.realEstateInfo.estimatedValue && (
-                  <p>
-                    <span className="font-medium">Оценочная стоимость:</span>{" "}
-                    {result.data.realEstateInfo.estimatedValue}
-                  </p>
+
+                {Object.keys(result.data.realEstateInfo.additionalInfo).length >
+                  0 && (
+                  <div className="mt-4">
+                    <details className="text-sm">
+                      <summary className="cursor-pointer text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
+                        Дополнительная информация:
+                      </summary>
+                      <div className="space-y-1 pl-4 max-h-60 overflow-y-auto">
+                        {Object.entries(
+                          result.data.realEstateInfo.additionalInfo,
+                        ).map(([key, value]) => (
+                          <p key={key} className="text-sm break-words">
+                            <span className="font-medium">{key}:</span>{" "}
+                            {String(value)}
+                          </p>
+                        ))}
+                      </div>
+                    </details>
+                  </div>
                 )}
-                <p>
-                  <span className="font-medium">Категория:</span>{" "}
-                  {result.data.realEstateInfo.category}
-                </p>
               </div>
             </div>
 
@@ -217,26 +226,39 @@ export default function EmulationPage() {
                         key={index}
                         className="p-4 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700"
                       >
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                          {offer.date}
-                        </p>
-                        <p className="font-medium text-black dark:text-zinc-50">
-                          {offer.price}
-                        </p>
-                        {offer.pricePerMeter && (
-                          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            {offer.pricePerMeter}
+                        {offer.price && (
+                          <p className="font-medium text-black dark:text-zinc-50 mb-2">
+                            {offer.price}
                           </p>
                         )}
-                        {offer.source && (
-                          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            Источник: {offer.source}
+                        {offer.info && (
+                          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+                            {offer.info}
                           </p>
                         )}
-                        {offer.status && (
-                          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            Статус: {offer.status}
-                          </p>
+                        {Object.keys(offer.additionalInfo).length > 0 && (
+                          <div className="mt-2 pt-2 border-t border-zinc-200 dark:border-zinc-700">
+                            <details className="text-sm">
+                              <summary className="cursor-pointer text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
+                                Дополнительная информация
+                              </summary>
+                              <div className="mt-2 space-y-1 pl-4">
+                                {Object.entries(offer.additionalInfo).map(
+                                  ([key, value]) => (
+                                    <p
+                                      key={key}
+                                      className="text-xs text-zinc-600 dark:text-zinc-400 break-words"
+                                    >
+                                      <span className="font-medium">
+                                        {key}:
+                                      </span>{" "}
+                                      {String(value)}
+                                    </p>
+                                  ),
+                                )}
+                              </div>
+                            </details>
+                          </div>
                         )}
                       </div>
                     ))}
