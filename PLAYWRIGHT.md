@@ -1,6 +1,63 @@
 # Playwright Testing Guide
 
-This project includes Playwright for web scraping.
+This project includes Playwright for web scraping and automation.
+
+## Cian Emulate API
+
+A new API endpoint has been created to run the Cian emulation script programmatically.
+
+### Endpoint
+
+```
+GET /api/cian-emulate
+```
+
+### Usage
+
+#### GET Request
+```bash
+# Using curl
+curl http://localhost:3000/api/cian-emulate
+
+# Using fetch in JavaScript
+const response = await fetch('/api/cian-emulate');
+const result = await response.json();
+console.log(result.data);
+```
+
+### Response Format
+
+```typescript
+{
+  success: true,
+  data: {
+    realEstateInfo: {
+      address: string;
+      totalArea: number;
+      roomsCount: number;
+      price?: string;
+      pricePerMeter?: string;
+      estimatedValue?: string;
+      category: string;
+    },
+    offersHistory: Array<{
+      date: string;
+      price: string;
+      pricePerMeter?: string;
+      source?: string;
+      status?: string;
+    }>
+  }
+}
+```
+
+### Notes
+
+- The endpoint has a 60-second timeout for Playwright operations
+- GET request uses default parameters (currently hardcoded in emulate.ts)
+- The script runs in headless mode when called from the API
+
+---
 
 ## Installation
 
@@ -20,23 +77,26 @@ npx playwright install webkit
 
 ## Standalone Script Example
 
-A standalone Playwright script is available at `playwright-scripts/playwright-example.ts` that demonstrates programmatic usage:
+### Cian Emulation Script
+
+The Cian emulation script is available at `playwright-scripts/cian/emulate.ts`:
 
 ```bash
-# Run the standalone script
-npx ts-node playwright-scripts/playwright-example.ts
-```
+# Run in headless mode (default)
+tsx playwright-scripts/cian/emulate.ts
 
-```bash
-# Run the standalone script with a visible browser
-tsx playwright-scripts/scrape-realty-example.ts --ui
-# npm run playwright:realty:ui
+# Run with visible browser (UI mode)
+tsx playwright-scripts/cian/emulate.ts --ui
+# or
+npm run playwright:cian:ui
 ```
 
 This script:
-- Launches a browser programmatically
-- ...
-- Logs the results
+- Navigates to Cian.ru calculator
+- Fills in property information (address, room number, area, etc.)
+- Extracts real estate data and offers history
+- Returns structured CianData object
+- Can be run standalone or via API endpoint
 
 ## Configuration
 

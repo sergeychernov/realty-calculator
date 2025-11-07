@@ -21,7 +21,7 @@ const userInput = {
 
 // TODO: POM PageObjectModel for all page steps
 
-async function emulate(): Promise<CianData | null> {
+export async function emulate(): Promise<CianData | null> {
   const browser = await chromium.launch({
     headless: !uiMode,
   });
@@ -113,11 +113,6 @@ async function emulate(): Promise<CianData | null> {
     return data;
 
     // TODO: закрытие опросника
-    // TODO: parse result  and return it as RealEstateProperties
-    //  При клике на аналоге "Объявления в этом и соседних домах - Посмотреть все"
-    //  открывается страница с новыми деталями: график цены, больше аналогов
-    //  (только нужно именно у "Продажа", тк есть еще "Аренда").
-    //  "Узнать подробнее о доме"
     // TODO: userInput from ui and return result on ui
     // TODO: как запускать на бэкенде и передавать данные
   } catch (error) {
@@ -144,7 +139,10 @@ async function emulate(): Promise<CianData | null> {
 //   }
 // }
 
-emulate().catch((error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
-});
+// Run directly when executed as a script
+if (require.main === module) {
+  emulate().catch((error) => {
+    console.error("Fatal error:", error);
+    process.exit(1);
+  });
+}
