@@ -7,6 +7,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // Increase timeout for Playwright operations
 
 export async function GET(request: Request) {
+  let data: CianData | null = null;
+
   try {
     const { searchParams } = new URL(request.url);
 
@@ -47,13 +49,26 @@ export async function GET(request: Request) {
     }
 
     console.log("🚀 Starting Cian emulation...", userInput);
-    const data: CianData | null = await emulate(userInput as UserInput);
+    data = await emulate(userInput as UserInput);
 
     if (!data) {
       return NextResponse.json(
         {
           error: "Failed to extract data from Cian",
           data: null,
+        },
+        { status: 500 },
+      );
+    }
+
+    // Check if data contains a screenshot (indicating an error occurred)
+    if (data.screenshot) {
+      console.log("⚠️ Emulation completed with errors, screenshot captured");
+      return NextResponse.json(
+        {
+          error: "Failed to extract data from Cian",
+          data,
+          screenshot: data.screenshot,
         },
         { status: 500 },
       );
@@ -70,10 +85,12 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     console.error("❌ Error in cian-emulate API:", error);
+
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : String(error),
-        data: null,
+        data: data && data.screenshot ? data : null,
+        screenshot: data?.screenshot,
       },
       { status: 500 },
     );

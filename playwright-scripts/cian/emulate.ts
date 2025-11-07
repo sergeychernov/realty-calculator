@@ -31,6 +31,7 @@ export async function emulate(userInput: UserInput): Promise<CianData | null> {
   });
 
   const page = await context.newPage();
+  let screenshot: string | undefined;
 
   const url = "https://www.cian.ru/my-home/";
   try {
@@ -119,6 +120,26 @@ export async function emulate(userInput: UserInput): Promise<CianData | null> {
     // TODO: как запускать на бэкенде и передавать данные
   } catch (error) {
     console.error(`⚠️  Could not extract all data from ${url}`, error);
+
+    // Capture screenshot on error
+    try {
+      const screenshotBuffer = await page.screenshot({ fullPage: true });
+      screenshot = screenshotBuffer.toString("base64");
+      console.log("📸 Screenshot captured on error");
+    } catch (screenshotError) {
+      console.error("Failed to capture screenshot:", screenshotError);
+    }
+
+    // Return partial data with screenshot
+    return {
+      realEstateInfo: {
+        price: "",
+        buildingInfo: {},
+        additionalInfo: {},
+      },
+      offersHistory: [],
+      screenshot,
+    };
   } finally {
     if (!uiMode) {
       await context.close();

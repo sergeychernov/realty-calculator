@@ -17,6 +17,7 @@ interface OfferHistoryItem {
 interface CianData {
   realEstateInfo: RealEstateInfo;
   offersHistory: OfferHistoryItem[];
+  screenshot?: string; // base64 encoded screenshot on error
 }
 
 /**

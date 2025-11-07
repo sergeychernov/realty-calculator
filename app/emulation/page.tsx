@@ -14,12 +14,14 @@ export default function EmulationPage() {
     data: CianData;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [screenshot, setScreenshot] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setResult(null);
+    setScreenshot(null);
 
     try {
       const params = new URLSearchParams({
@@ -34,6 +36,9 @@ export default function EmulationPage() {
 
       if (!response.ok) {
         setError(data.error || "Failed to fetch data");
+        if (data.screenshot) {
+          setScreenshot(data.screenshot);
+        }
         return;
       }
 
@@ -151,9 +156,25 @@ export default function EmulationPage() {
         </form>
 
         {error && (
-          <div className="w-full max-w-xl p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <p className="text-red-800 dark:text-red-200 font-medium">Ошибка</p>
-            <p className="text-red-600 dark:text-red-300">{error}</p>
+          <div className="w-full max-w-xl space-y-4">
+            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <p className="text-red-800 dark:text-red-200 font-medium">
+                Ошибка
+              </p>
+              <p className="text-red-600 dark:text-red-300">{error}</p>
+            </div>
+            {screenshot && (
+              <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+                <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                  Screenshot браузера:
+                </p>
+                <img
+                  src={`data:image/png;base64,${screenshot}`}
+                  alt="Browser screenshot on error"
+                  className="w-full rounded border border-zinc-300 dark:border-zinc-700"
+                />
+              </div>
+            )}
           </div>
         )}
 
