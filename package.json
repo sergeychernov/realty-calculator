@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "playwright:cian:ui": "tsx playwright-scripts/cian.ts --ui"
+    "playwright:cian:ui": "tsx playwright-scripts/cian/emulate.ts --ui"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
