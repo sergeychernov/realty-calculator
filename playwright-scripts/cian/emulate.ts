@@ -77,6 +77,7 @@ export async function emulate(userInput: UserInput): Promise<CianData | null> {
     // }
 
     await page.locator('[data-name="AddNewCardButton"]').click({ force: true });
+    console.log("✅ Step 1 emulated successfully\n");
 
     // https://www.cian.ru/valuation-form/?houseId=1761177&address=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C+%D1%83%D0%BB%D0%B8%D1%86%D0%B0+%D0%A3%D1%81%D0%B8%D0%B5%D0%B2%D0%B8%D1%87%D0%B0%2C+1&totalArea=49.3&roomsCount=2&estimationId=5960110&myHome=2756519
     // TODO: use this page with query string, skip step 1?
@@ -94,6 +95,8 @@ export async function emulate(userInput: UserInput): Promise<CianData | null> {
 
     // 2 Options: 2. "Вперед к анкете" (добавление еще информации об объекте)
     // TODO:
+
+    console.log("✅ Step 2 emulated successfully\n");
 
     const myEstimationCard = await page
       .locator('[data-name="ListCard"]')

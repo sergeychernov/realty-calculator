@@ -25,11 +25,29 @@ export async function GET(request: Request) {
     const area = searchParams.get("area");
     if (area) userInput.area = parseFloat(area);
 
-    console.log("🚀 Starting Cian emulation...", userInput);
-
-    const data: CianData | null = await emulate(
-      Object.keys(userInput).length > 0 ? (userInput as UserInput) : undefined,
+    // Validate that all required fields are present
+    const requiredFields: (keyof UserInput)[] = [
+      "address",
+      "roomNumber",
+      "roomsCount",
+      "area",
+    ];
+    const missingFields = requiredFields.filter(
+      (field) => userInput[field] === undefined,
     );
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        {
+          error: `Missing required fields: ${missingFields.join(", ")}`,
+          data: null,
+        },
+        { status: 400 },
+      );
+    }
+
+    console.log("🚀 Starting Cian emulation...", userInput);
+    const data: CianData | null = await emulate(userInput as UserInput);
 
     if (!data) {
       return NextResponse.json(
