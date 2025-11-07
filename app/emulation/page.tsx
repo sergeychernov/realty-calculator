@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { CianData } from "@/playwright-scripts/cian/extract-data";
+import { useSearchParams } from "next/navigation";
 
 export default function EmulationPage() {
   const [address, setAddress] = useState("");
@@ -16,6 +17,20 @@ export default function EmulationPage() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [screenshot, setScreenshot] = useState<string | null>(null);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const initialAddress = searchParams.get("address");
+    const initialRoomNumber = searchParams.get("roomNumber");
+    const initialRoomsCount = searchParams.get("roomsCount");
+    const initialArea = searchParams.get("area");
+
+    if (initialAddress) setAddress(initialAddress);
+    if (initialRoomNumber) setRoomNumber(initialRoomNumber);
+    if (initialRoomsCount) setRoomsCount(initialRoomsCount);
+    if (initialArea) setArea(initialArea);
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -211,40 +226,40 @@ export default function EmulationPage() {
 
                 {Object.keys(result.data.realEstateInfo.buildingInfo).length >
                   0 && (
-                  <div className="mt-4">
-                    <h4 className="font-medium mb-2">Информация о здании:</h4>
-                    <div className="space-y-1 pl-4">
-                      {Object.entries(
-                        result.data.realEstateInfo.buildingInfo,
-                      ).map(([key, value]) => (
-                        <p key={key} className="text-sm">
-                          <span className="font-medium">{key}:</span> {value}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {Object.keys(result.data.realEstateInfo.additionalInfo).length >
-                  0 && (
-                  <div className="mt-4">
-                    <details className="text-sm">
-                      <summary className="cursor-pointer text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
-                        Дополнительная информация:
-                      </summary>
-                      <div className="space-y-1 pl-4 max-h-60 overflow-y-auto">
+                    <div className="mt-4">
+                      <h4 className="font-medium mb-2">Информация о здании:</h4>
+                      <div className="space-y-1 pl-4">
                         {Object.entries(
-                          result.data.realEstateInfo.additionalInfo,
+                          result.data.realEstateInfo.buildingInfo,
                         ).map(([key, value]) => (
-                          <p key={key} className="text-sm break-words">
-                            <span className="font-medium">{key}:</span>{" "}
-                            {String(value)}
+                          <p key={key} className="text-sm">
+                            <span className="font-medium">{key}:</span> {value}
                           </p>
                         ))}
                       </div>
-                    </details>
-                  </div>
-                )}
+                    </div>
+                  )}
+
+                {Object.keys(result.data.realEstateInfo.additionalInfo).length >
+                  0 && (
+                    <div className="mt-4">
+                      <details className="text-sm">
+                        <summary className="cursor-pointer text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
+                          Дополнительная информация:
+                        </summary>
+                        <div className="space-y-1 pl-4 max-h-60 overflow-y-auto">
+                          {Object.entries(
+                            result.data.realEstateInfo.additionalInfo,
+                          ).map(([key, value]) => (
+                            <p key={key} className="text-sm break-words">
+                              <span className="font-medium">{key}:</span>{" "}
+                              {String(value)}
+                            </p>
+                          ))}
+                        </div>
+                      </details>
+                    </div>
+                  )}
               </div>
             </div>
 

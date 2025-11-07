@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -27,7 +28,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <header className="fixed top-0 inset-x-0 z-50 w-full border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur">
+          <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
+            <Link
+              href="/"
+              className="inline-flex items-center text-sm text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-zinc-50"
+            >
+              ← На главную
+            </Link>
+          </div>
+        </header>
+        <div className="pt-14">{children}</div>
       </body>
     </html>
   );

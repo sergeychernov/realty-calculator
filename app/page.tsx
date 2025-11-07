@@ -9,6 +9,20 @@ export default function Home() {
   const [rooms, setRooms] = useState("студия");
   const [area, setArea] = useState("");
   const [entrance, setEntrance] = useState("");
+
+  const roomsCountParam = rooms === "студия" ? "0" : rooms === "5+" ? "5" : rooms;
+  const emulationHref = `/emulation?${new URLSearchParams({
+    address,
+    roomNumber,
+    roomsCount: roomsCountParam,
+    area,
+  }).toString()}`;
+  const reportHref = `/report?${new URLSearchParams({
+    address,
+    rooms,
+    area,
+    entrance,
+  }).toString()}`;
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-10 px-16 bg-white dark:bg-black sm:items-start">
@@ -123,13 +137,19 @@ export default function Home() {
             />
           </div>
 
-          <div>
-            <button
-              type="submit"
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href={reportHref}
               className="inline-flex h-12 items-center justify-center rounded-full bg-foreground px-6 text-background font-medium transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc]"
             >
               Получить отчёт
-            </button>
+            </Link>
+            <Link
+              href={emulationHref}
+              className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-200 px-6 text-black font-medium transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
+            >
+              Получить отчёт через эмуляцию
+            </Link>
           </div>
         </form>
 
@@ -151,6 +171,21 @@ export default function Home() {
                 }}
               >
                 Москва, Красноказарменная улица, 14ак6 · 4 комнаты · 96 м² · подъезд 11
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="underline"
+                onClick={() => {
+                  setAddress("Москва, улица Усиевича, 1");
+                  setRoomNumber("27");
+                  setRooms("2");
+                  setArea("52.7");
+                  setEntrance("");
+                }}
+              >
+                Москва, улица Усиевича, 1 · кв. 27 · 2 комнаты · 52.7 м²
               </button>
             </li>
           </ul>
