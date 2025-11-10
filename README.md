@@ -43,6 +43,20 @@ This project includes Playwright for web automation. See [PLAYWRIGHT.md](./PLAYW
 
 - `playwright:cian:ui` - Run cian scaper in ui mode
 
+### Browserless (удалённый браузер)
+
+Для работы Playwright в serverless-средах используйте удалённый браузер:
+
+1. Создайте токен на `https://www.browserless.io`.
+2. Добавьте переменную окружения на сервере деплоя (например, в Vercel Project Settings → Environment Variables):
+```
+BROWSER_WS_ENDPOINT=wss://chrome.browserless.io/playwright?token=YOUR_TOKEN
+```
+3. Локально переменную можно не задавать — при её отсутствии скрипты запустят локальный Chromium. Для этого установите браузеры:
+```
+npx playwright install chromium
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

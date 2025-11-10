@@ -1,4 +1,4 @@
-import { chromium } from "@playwright/test";
+import { chromium } from "playwright-core";
 import { extractData, CianData } from "./extract-data";
 
 export interface UserInput {
@@ -21,9 +21,28 @@ const userContext = {
 // TODO: POM PageObjectModel for all page steps
 
 export async function emulate(userInput: UserInput): Promise<CianData | null> {
-  const browser = await chromium.launch({
-    headless: !uiMode,
-  });
+  let wsEndpoint =
+    process.env.BROWSER_WS_ENDPOINT || process.env.BROWSERLESS_WS_ENDPOINT;
+
+  if (wsEndpoint) {
+    // Migrate legacy endpoints to current Browserless production endpoints
+    wsEndpoint = wsEndpoint
+      .replace("chrome.browserless.io/playwright", "production-sfo.browserless.io")
+      .replace("/playwright", "");
+    if (!/^wss?:\/\//i.test(wsEndpoint)) {
+      wsEndpoint = `wss://${wsEndpoint}`;
+    }
+    // Append token from env if not present in the URL
+    if (!/[\?&]token=/.test(wsEndpoint) && process.env.BROWSERLESS_TOKEN) {
+      wsEndpoint += (wsEndpoint.includes("?") ? "&" : "?") + `token=${process.env.BROWSERLESS_TOKEN}`;
+    }
+  }
+
+  const browser = wsEndpoint
+    ? await chromium.connectOverCDP(wsEndpoint)
+    : await chromium.launch({
+      headless: !uiMode,
+    });
 
   const context = await browser.newContext({
     userAgent: userContext.userAgent,

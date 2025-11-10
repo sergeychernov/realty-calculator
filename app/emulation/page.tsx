@@ -8,6 +8,10 @@ function EmulationPageContent() {
   const [address, setAddress] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [roomsCount, setRoomsCount] = useState("1");
+
+
+
+  
   const [area, setArea] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{

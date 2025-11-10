@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Page } from "@playwright/test";
+import type { Page } from "playwright-core";
 
 // TODO: список сверить с google table
 interface RealEstateInfo {
